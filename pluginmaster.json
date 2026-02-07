@@ -1,0 +1,23 @@
+[
+  {
+    "Author": "izaghar",
+    "Name": "Allagan Sync",
+    "Punchline": "Sync your FFXIV collections with allagan.app",
+    "Description": "Allagan Sync - Track and sync your mounts, minions, emotes, orchestrions, and titles",
+    "ApplicableVersion": "any",
+    "Tags": [
+      "collection",
+      "sync",
+      "mounts",
+      "minions"
+    ],
+    "InternalName": "AllaganSync",
+    "AssemblyVersion": "0.0.0.1",
+    "RepoUrl": "https://github.com/izaghar/allagan-sync",
+    "DalamudApiLevel": 14,
+    "DownloadLinkInstall": "https://github.com/izaghar/allagan-sync/releases/latest/download/latest.zip",
+    "DownloadLinkUpdate": "https://github.com/izaghar/allagan-sync/releases/latest/download/latest.zip",
+    "DownloadLinkTesting": "https://github.com/izaghar/allagan-sync/releases/latest/download/latest.zip",
+    "LastUpdate": 0
+  }
+]
