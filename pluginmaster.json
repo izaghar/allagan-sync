@@ -12,7 +12,7 @@
       "minions"
     ],
     "InternalName": "AllaganSync",
-    "AssemblyVersion": "0.0.0.1",
+    "AssemblyVersion": "0.1.0",
     "RepoUrl": "https://github.com/izaghar/allagan-sync",
     "DalamudApiLevel": 14,
     "DownloadLinkInstall": "https://github.com/izaghar/allagan-sync/releases/latest/download/latest.zip",
