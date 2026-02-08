@@ -41,6 +41,11 @@ jobs:
             throw "latest.zip not found under AllaganSync/bin"
           }
 
+          $icon = Resolve-Path "assets/icon.png"
+          if (-not $icon) {
+            throw "assets/icon.png not found"
+          }
+
           $manifest = Get-Content "AllaganSync/AllaganSync.json" -Raw | ConvertFrom-Json
           [xml]$csproj = Get-Content "AllaganSync/AllaganSync.csproj"
           $version = $csproj.Project.PropertyGroup.Version
@@ -50,6 +55,7 @@ jobs:
 
           $repoUrl = "https://github.com/${{ github.repository }}"
           $latestZipUrl = "$repoUrl/releases/latest/download/latest.zip"
+          $iconUrl = "$repoUrl/releases/latest/download/icon.png"
           $lastUpdate = [DateTimeOffset]::UtcNow.ToUnixTimeSeconds()
 
           $pluginMasterEntry = [ordered]@{
@@ -66,6 +72,7 @@ jobs:
             DownloadLinkInstall = $latestZipUrl
             DownloadLinkUpdate = $latestZipUrl
             DownloadLinkTesting = $latestZipUrl
+            IconUrl = $iconUrl
             LastUpdate = $lastUpdate
           }
 
@@ -74,6 +81,7 @@ jobs:
 
           "zip_path=$($zip.FullName)" >> $env:GITHUB_OUTPUT
           "pluginmaster_path=$((Resolve-Path $pluginMasterPath).Path)" >> $env:GITHUB_OUTPUT
+          "icon_path=$($icon.Path)" >> $env:GITHUB_OUTPUT
           "version=$version" >> $env:GITHUB_OUTPUT
 
       - name: Create GitHub release
@@ -85,3 +93,4 @@ jobs:
           files: |
             ${{ steps.assets.outputs.zip_path }}
             ${{ steps.assets.outputs.pluginmaster_path }}
+            ${{ steps.assets.outputs.icon_path }}
