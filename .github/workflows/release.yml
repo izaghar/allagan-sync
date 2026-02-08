@@ -52,6 +52,7 @@ jobs:
           if ([string]::IsNullOrWhiteSpace($version)) {
             throw "Version not found in AllaganSync.csproj"
           }
+          $assemblyVersion = if (($version -split '\.').Count -eq 3) { "$version.0" } else { $version }
 
           $repoUrl = "https://github.com/${{ github.repository }}"
           $latestZipUrl = "$repoUrl/releases/latest/download/latest.zip"
@@ -66,7 +67,7 @@ jobs:
             ApplicableVersion = $manifest.ApplicableVersion
             Tags = $manifest.Tags
             InternalName = "AllaganSync"
-            AssemblyVersion = $version
+            AssemblyVersion = $assemblyVersion
             RepoUrl = $repoUrl
             DalamudApiLevel = 14
             DownloadLinkInstall = $latestZipUrl

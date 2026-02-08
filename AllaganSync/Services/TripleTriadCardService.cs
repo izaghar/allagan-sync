@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Dalamud.Plugin.Services;
-using FFXIVClientStructs.FFXIV.Client.Game.UI;
 using Lumina.Excel.Sheets;
 
 namespace AllaganSync.Services;
@@ -9,10 +8,12 @@ namespace AllaganSync.Services;
 public class TripleTriadCardService
 {
     private readonly IDataManager dataManager;
+    private readonly IUnlockState unlockState;
 
-    public TripleTriadCardService(IDataManager dataManager)
+    public TripleTriadCardService(IDataManager dataManager, IUnlockState unlockState)
     {
         this.dataManager = dataManager;
+        this.unlockState = unlockState;
     }
 
     private static bool IsValid(TripleTriadCard card)
@@ -26,7 +27,7 @@ public class TripleTriadCardService
         return sheet?.Count(IsValid) ?? 0;
     }
 
-    public unsafe List<uint> GetUnlockedIds()
+    public List<uint> GetUnlockedIds()
     {
         var unlockedIds = new List<uint>();
         var cardSheet = dataManager.GetExcelSheet<TripleTriadCard>();
@@ -34,16 +35,12 @@ public class TripleTriadCardService
         if (cardSheet == null)
             return unlockedIds;
 
-        var uiState = UIState.Instance();
-        if (uiState == null)
-            return unlockedIds;
-
         foreach (var row in cardSheet)
         {
             if (!IsValid(row))
                 continue;
 
-            if (uiState->IsTripleTriadCardUnlocked((ushort)row.RowId))
+            if (unlockState.IsTripleTriadCardUnlocked(row))
             {
                 unlockedIds.Add(row.RowId);
             }

@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Dalamud.Plugin.Services;
-using FFXIVClientStructs.FFXIV.Client.Game.UI;
 using Lumina.Excel.Sheets;
 
 namespace AllaganSync.Services;
@@ -9,10 +8,12 @@ namespace AllaganSync.Services;
 public class OrchestrionService
 {
     private readonly IDataManager dataManager;
+    private readonly IUnlockState unlockState;
 
-    public OrchestrionService(IDataManager dataManager)
+    public OrchestrionService(IDataManager dataManager, IUnlockState unlockState)
     {
         this.dataManager = dataManager;
+        this.unlockState = unlockState;
     }
 
     private static bool IsValid(Orchestrion orchestrion)
@@ -26,7 +27,7 @@ public class OrchestrionService
         return sheet?.Count(IsValid) ?? 0;
     }
 
-    public unsafe List<uint> GetUnlockedIds()
+    public List<uint> GetUnlockedIds()
     {
         var unlockedIds = new List<uint>();
         var orchestrionSheet = dataManager.GetExcelSheet<Orchestrion>();
@@ -34,16 +35,12 @@ public class OrchestrionService
         if (orchestrionSheet == null)
             return unlockedIds;
 
-        var playerState = PlayerState.Instance();
-        if (playerState == null)
-            return unlockedIds;
-
         foreach (var row in orchestrionSheet)
         {
             if (!IsValid(row))
                 continue;
 
-            if (playerState->IsOrchestrionRollUnlocked(row.RowId))
+            if (unlockState.IsOrchestrionUnlocked(row))
             {
                 unlockedIds.Add(row.RowId);
             }

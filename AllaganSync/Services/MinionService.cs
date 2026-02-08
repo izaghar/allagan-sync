@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Dalamud.Plugin.Services;
-using FFXIVClientStructs.FFXIV.Client.Game.UI;
 using Lumina.Excel.Sheets;
 
 namespace AllaganSync.Services;
@@ -9,10 +8,12 @@ namespace AllaganSync.Services;
 public class MinionService
 {
     private readonly IDataManager dataManager;
+    private readonly IUnlockState unlockState;
 
-    public MinionService(IDataManager dataManager)
+    public MinionService(IDataManager dataManager, IUnlockState unlockState)
     {
         this.dataManager = dataManager;
+        this.unlockState = unlockState;
     }
 
     private static bool IsValid(Companion minion)
@@ -26,7 +27,7 @@ public class MinionService
         return sheet?.Count(IsValid) ?? 0;
     }
 
-    public unsafe List<uint> GetUnlockedIds()
+    public List<uint> GetUnlockedIds()
     {
         var unlockedIds = new List<uint>();
         var companionSheet = dataManager.GetExcelSheet<Companion>();
@@ -34,16 +35,12 @@ public class MinionService
         if (companionSheet == null)
             return unlockedIds;
 
-        var uiState = UIState.Instance();
-        if (uiState == null)
-            return unlockedIds;
-
         foreach (var row in companionSheet)
         {
             if (!IsValid(row))
                 continue;
 
-            if (uiState->IsCompanionUnlocked(row.RowId))
+            if (unlockState.IsCompanionUnlocked(row))
             {
                 unlockedIds.Add(row.RowId);
             }

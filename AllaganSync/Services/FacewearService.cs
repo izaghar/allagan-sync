@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Dalamud.Plugin.Services;
-using FFXIVClientStructs.FFXIV.Client.Game.UI;
 using Lumina.Excel.Sheets;
 
 namespace AllaganSync.Services;
@@ -9,10 +8,12 @@ namespace AllaganSync.Services;
 public class FacewearService
 {
     private readonly IDataManager dataManager;
+    private readonly IUnlockState unlockState;
 
-    public FacewearService(IDataManager dataManager)
+    public FacewearService(IDataManager dataManager, IUnlockState unlockState)
     {
         this.dataManager = dataManager;
+        this.unlockState = unlockState;
     }
 
     private bool IsValid(GlassesStyle glassesStyle)
@@ -40,16 +41,13 @@ public class FacewearService
         return sheet?.Count(IsValid) ?? 0;
     }
 
-    public unsafe List<uint> GetUnlockedIds()
+    public List<uint> GetUnlockedIds()
     {
         var unlockedIds = new List<uint>();
         var glassesStyleSheet = dataManager.GetExcelSheet<GlassesStyle>();
+        var glassesSheet = dataManager.GetExcelSheet<Glasses>();
 
-        if (glassesStyleSheet == null)
-            return unlockedIds;
-
-        var playerState = PlayerState.Instance();
-        if (playerState == null)
+        if (glassesStyleSheet == null || glassesSheet == null)
             return unlockedIds;
 
         foreach (var row in glassesStyleSheet)
@@ -57,9 +55,11 @@ public class FacewearService
             if (!IsValid(row))
                 continue;
 
-            // Use the Glasses ID (not GlassesStyle ID) for unlock check
             var glassesId = row.Glasses.FirstOrDefault().RowId;
-            var isUnlocked = playerState->IsGlassesUnlocked((ushort)glassesId);
+            if (!glassesSheet.TryGetRow(glassesId, out var glassesRow))
+                continue;
+
+            var isUnlocked = unlockState.IsGlassesUnlocked(glassesRow);
 
             if (isUnlocked)
             {

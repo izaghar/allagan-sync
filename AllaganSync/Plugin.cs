@@ -43,16 +43,16 @@ public sealed class Plugin : IDalamudPlugin
         lastContentId = playerState.ContentId;
 
         var configService = new ConfigurationService(pluginInterface, playerState);
-        var orchestrionService = new OrchestrionService(dataManager);
-        var emoteService = new EmoteService(dataManager);
+        var orchestrionService = new OrchestrionService(dataManager, unlockState);
+        var emoteService = new EmoteService(dataManager, unlockState);
         titleService = new TitleService(dataManager, log);
-        var mountService = new MountService(dataManager);
-        var minionService = new MinionService(dataManager);
+        var mountService = new MountService(dataManager, unlockState);
+        var minionService = new MinionService(dataManager, unlockState);
         achievementService = new AchievementService(dataManager, log);
-        var bardingService = new BardingService(dataManager);
-        var tripleTriadCardService = new TripleTriadCardService(dataManager);
-        var fashionAccessoryService = new FashionAccessoryService(dataManager);
-        var facewearService = new FacewearService(dataManager);
+        var bardingService = new BardingService(dataManager, unlockState);
+        var tripleTriadCardService = new TripleTriadCardService(dataManager, unlockState);
+        var fashionAccessoryService = new FashionAccessoryService(dataManager, unlockState);
+        var facewearService = new FacewearService(dataManager, unlockState);
         var vistaService = new VistaService(dataManager);
         var fishService = new FishService(dataManager);
         var blueMageSpellService = new BlueMageSpellService(dataManager, unlockState);

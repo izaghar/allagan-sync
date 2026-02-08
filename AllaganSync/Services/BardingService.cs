@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Dalamud.Plugin.Services;
-using FFXIVClientStructs.FFXIV.Client.Game.UI;
 using Lumina.Excel.Sheets;
 
 namespace AllaganSync.Services;
@@ -9,10 +8,12 @@ namespace AllaganSync.Services;
 public class BardingService
 {
     private readonly IDataManager dataManager;
+    private readonly IUnlockState unlockState;
 
-    public BardingService(IDataManager dataManager)
+    public BardingService(IDataManager dataManager, IUnlockState unlockState)
     {
         this.dataManager = dataManager;
+        this.unlockState = unlockState;
     }
 
     private static bool IsValid(BuddyEquip barding)
@@ -26,7 +27,7 @@ public class BardingService
         return sheet?.Count(IsValid) ?? 0;
     }
 
-    public unsafe List<uint> GetUnlockedIds()
+    public List<uint> GetUnlockedIds()
     {
         var unlockedIds = new List<uint>();
         var bardingSheet = dataManager.GetExcelSheet<BuddyEquip>();
@@ -34,16 +35,12 @@ public class BardingService
         if (bardingSheet == null)
             return unlockedIds;
 
-        var uiState = UIState.Instance();
-        if (uiState == null)
-            return unlockedIds;
-
         foreach (var row in bardingSheet)
         {
             if (!IsValid(row))
                 continue;
 
-            if (uiState->Buddy.CompanionInfo.IsBuddyEquipUnlocked(row.RowId))
+            if (unlockState.IsBuddyEquipUnlocked(row))
             {
                 unlockedIds.Add(row.RowId);
             }

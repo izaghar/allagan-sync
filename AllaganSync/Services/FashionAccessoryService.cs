@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Dalamud.Plugin.Services;
-using FFXIVClientStructs.FFXIV.Client.Game.UI;
 using Lumina.Excel.Sheets;
 
 namespace AllaganSync.Services;
@@ -9,10 +8,12 @@ namespace AllaganSync.Services;
 public class FashionAccessoryService
 {
     private readonly IDataManager dataManager;
+    private readonly IUnlockState unlockState;
 
-    public FashionAccessoryService(IDataManager dataManager)
+    public FashionAccessoryService(IDataManager dataManager, IUnlockState unlockState)
     {
         this.dataManager = dataManager;
+        this.unlockState = unlockState;
     }
 
     private static bool IsValid(Ornament ornament)
@@ -33,7 +34,7 @@ public class FashionAccessoryService
         return sheet?.Count(IsValid) ?? 0;
     }
 
-    public unsafe List<uint> GetUnlockedIds()
+    public List<uint> GetUnlockedIds()
     {
         var unlockedIds = new List<uint>();
         var ornamentSheet = dataManager.GetExcelSheet<Ornament>();
@@ -41,16 +42,12 @@ public class FashionAccessoryService
         if (ornamentSheet == null)
             return unlockedIds;
 
-        var playerState = PlayerState.Instance();
-        if (playerState == null)
-            return unlockedIds;
-
         foreach (var row in ornamentSheet)
         {
             if (!IsValid(row))
                 continue;
 
-            if (playerState->IsOrnamentUnlocked(row.RowId))
+            if (unlockState.IsOrnamentUnlocked(row))
             {
                 unlockedIds.Add(row.RowId);
             }
