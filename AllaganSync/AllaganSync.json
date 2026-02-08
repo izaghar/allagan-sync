@@ -3,7 +3,7 @@
     "Name": "Allagan Sync",
     "Punchline": "Sync your FFXIV collections with allagan.app",
     "Description": "Allagan Sync - Track and sync your mounts, minions, emotes, orchestrions, and titles",
-    "IconUrl": "https://github.com/izaghar/allagan-sync/releases/latest/download/icon.png",
+    "IconUrl": "https://raw.githubusercontent.com/izaghar/allagan-sync/main/assets/icon.png",
     "ApplicableVersion": "any",
     "Tags": [
         "collection",

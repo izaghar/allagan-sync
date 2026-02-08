@@ -55,7 +55,7 @@ jobs:
 
           $repoUrl = "https://github.com/${{ github.repository }}"
           $latestZipUrl = "$repoUrl/releases/latest/download/latest.zip"
-          $iconUrl = "$repoUrl/releases/latest/download/icon.png"
+          $iconUrl = "https://raw.githubusercontent.com/${{ github.repository }}/main/assets/icon.png"
           $lastUpdate = [DateTimeOffset]::UtcNow.ToUnixTimeSeconds()
 
           $pluginMasterEntry = [ordered]@{

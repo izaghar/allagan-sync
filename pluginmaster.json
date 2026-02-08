@@ -12,13 +12,13 @@
       "minions"
     ],
     "InternalName": "AllaganSync",
-    "AssemblyVersion": "0.2.0",
+    "AssemblyVersion": "0.2.1",
     "RepoUrl": "https://github.com/izaghar/allagan-sync",
     "DalamudApiLevel": 14,
     "DownloadLinkInstall": "https://github.com/izaghar/allagan-sync/releases/latest/download/latest.zip",
     "DownloadLinkUpdate": "https://github.com/izaghar/allagan-sync/releases/latest/download/latest.zip",
     "DownloadLinkTesting": "https://github.com/izaghar/allagan-sync/releases/latest/download/latest.zip",
-    "IconUrl": "https://github.com/izaghar/allagan-sync/releases/latest/download/icon.png",
+    "IconUrl": "https://raw.githubusercontent.com/izaghar/allagan-sync/main/assets/icon.png",
     "LastUpdate": 0
   }
 ]
