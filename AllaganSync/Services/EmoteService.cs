@@ -11,9 +11,9 @@ public class EmoteService
     private const uint TwinAdderCompanyId = 2;
     private const uint ImmortalFlamesCompanyId = 3;
 
-    private const uint FlameSaluteEmoteId = 55;
+    private const uint FlameSaluteEmoteId = 57;
     private const uint SerpentSaluteEmoteId = 56;
-    private const uint StormSaluteEmoteId = 57;
+    private const uint StormSaluteEmoteId = 55;
 
     // Salute GC company emotes: do not treat UnlockLink == 0 as auto-unlocked.
     private static readonly HashSet<uint> DefaultUnlockExceptions = new()
