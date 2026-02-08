@@ -7,26 +7,51 @@ namespace AllaganSync.Services;
 
 public class EmoteService
 {
+    private const uint MaelstromCompanyId = 1;
+    private const uint TwinAdderCompanyId = 2;
+    private const uint ImmortalFlamesCompanyId = 3;
+
+    private const uint FlameSaluteEmoteId = 55;
+    private const uint SerpentSaluteEmoteId = 56;
+    private const uint StormSaluteEmoteId = 57;
+
     // Salute GC company emotes: do not treat UnlockLink == 0 as auto-unlocked.
     private static readonly HashSet<uint> DefaultUnlockExceptions = new()
     {
-        55,
-        56,
-        57
+        FlameSaluteEmoteId,
+        SerpentSaluteEmoteId,
+        StormSaluteEmoteId
     };
 
     private readonly IDataManager dataManager;
     private readonly IUnlockState unlockState;
+    private readonly IPlayerState playerState;
 
-    public EmoteService(IDataManager dataManager, IUnlockState unlockState)
+    public EmoteService(IDataManager dataManager, IUnlockState unlockState, IPlayerState playerState)
     {
         this.dataManager = dataManager;
         this.unlockState = unlockState;
+        this.playerState = playerState;
     }
 
     private static bool IsValid(Emote emote)
     {
         return !emote.Name.IsEmpty && emote.Order > 0;
+    }
+
+    private bool IsGrandCompanySaluteUnlocked(Emote emote)
+    {
+        var currentCompanyId = playerState.GrandCompany.RowId;
+        if (currentCompanyId == 0)
+            return unlockState.IsEmoteUnlocked(emote);
+
+        return emote.RowId switch
+        {
+            FlameSaluteEmoteId => currentCompanyId == ImmortalFlamesCompanyId,
+            SerpentSaluteEmoteId => currentCompanyId == TwinAdderCompanyId,
+            StormSaluteEmoteId => currentCompanyId == MaelstromCompanyId,
+            _ => unlockState.IsEmoteUnlocked(emote)
+        };
     }
 
     private bool IsUnlocked(Emote emote)
@@ -35,7 +60,7 @@ public class EmoteService
         if (emote.UnlockLink == 0)
         {
             if (DefaultUnlockExceptions.Contains(emote.RowId))
-                return unlockState.IsEmoteUnlocked(emote);
+                return IsGrandCompanySaluteUnlocked(emote);
 
             return true;
         }

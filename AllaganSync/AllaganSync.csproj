@@ -1,6 +1,6 @@
 <Project Sdk="Dalamud.NET.Sdk/14.0.1">
     <PropertyGroup>
-        <Version>0.2.2.0</Version>
+        <Version>0.2.3.0</Version>
         <InternalName>AllaganSync</InternalName>
         <Description>Allagan Sync - Sync your FFXIV collections</Description>
         <PackageProjectUrl>https://github.com/izaghar/allagan-sync</PackageProjectUrl>

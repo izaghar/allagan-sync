@@ -44,7 +44,7 @@ public sealed class Plugin : IDalamudPlugin
 
         var configService = new ConfigurationService(pluginInterface, playerState);
         var orchestrionService = new OrchestrionService(dataManager, unlockState);
-        var emoteService = new EmoteService(dataManager, unlockState);
+        var emoteService = new EmoteService(dataManager, unlockState, playerState);
         titleService = new TitleService(dataManager, log);
         var mountService = new MountService(dataManager, unlockState);
         var minionService = new MinionService(dataManager, unlockState);
